@@ -34,17 +34,17 @@ const defaultImg = 'imgs/img-place.png';
 
 /* Playlist built from your audio/ folder - update entries if filenames differ */
 const playlist = [
-  { src: 'audio/Mac DeMarco - No Other Heart.mp3', title: 'No Other Heart', artist: 'Mac DeMarco',},
-  { src: 'audio/IV OF SPADES - Captivated.mp3', title: 'Captivated', artist: 'IV OF SPADES' },
-  { src: 'audio/IV OF SPADES - Kabisado.mp3', title: 'Kabisado', artist: 'IV OF SPADES' },
-  { src: 'audio/Los Retros - Someone To Spend Time With.mp3', title: 'Someone To Spend Time With', artist: 'Los Retros'},
-  { src: 'audio/Mac DeMarco - My Kind Of Woman .mp3', title: 'My Kind Of Woman', artist: 'Mac DeMarco',},
-  { src: 'audio/Antukin - Rico Blanco.mp3', title: 'Antukin', artist: 'Rico Blanco'},
-  { src: 'audio/Orange & Lemons - Yakap Sa Dilim.mp3', title: 'Yakap Sa Dilim', artist: 'Orange & Lemons' },
-  { src: 'audio/The 1975 - About You.mp3', title: 'About You', artist: 'The 1975', img: 'imgs/img-place.png' },
-  { src: 'audio/waltz of four left feet.mp3', title: 'Waltz of Four Left Feet', artist: 'shirebound'},
-  { src: 'audio/pahintulot.mp3', title: 'Pahintulot', artist: 'shirebound',},
-  { src: 'audio/wave to earth - seasons.mp3', title: 'seasons', artist: 'wave to earth'}
+  { src: 'audio/Mac DeMarco - No Other Heart.mp3', title: 'No Other Heart', artist: 'Mac DeMarco', img: 'img/mc1.png' },
+  { src: 'audio/IV OF SPADES - Captivated.mp3', title: 'Captivated', artist: 'IV OF SPADES', img: 'img/mc2.png' },
+  { src: 'audio/IV OF SPADES - Kabisado.mp3', title: 'Kabisado', artist: 'IV OF SPADES', img: 'img/mc3.png' },
+  { src: 'audio/Los Retros - Someone To Spend Time With.mp3', title: 'Someone To Spend Time With', artist: 'Los Retros', img: 'img/mc1.png' },
+  { src: 'audio/Mac DeMarco - My Kind Of Woman .mp3', title: 'My Kind Of Woman', artist: 'Mac DeMarco', img: 'img/mc2.png' },
+  { src: 'audio/Antukin - Rico Blanco.mp3', title: 'Antukin', artist: 'Rico Blanco', img: 'img/mc1.png' },
+  { src: 'audio/Orange & Lemons - Yakap Sa Dilim.mp3', title: 'Yakap Sa Dilim', artist: 'Orange & Lemons', img: 'img/mc2.png' },
+  { src: 'audio/The 1975 - About You.mp3', title: 'About You', artist: 'The 1975', img: 'img/mc3.png' },
+  { src: 'audio/waltz of four left feet.mp3', title: 'Waltz of Four Left Feet', artist: 'shirebound', img: 'img/mc1.png' },
+  { src: 'audio/pahintulot.mp3', title: 'Pahintulot', artist: 'shirebound', img: 'img/mc2.png' },
+  { src: 'audio/wave to earth - seasons.mp3', title: 'seasons', artist: 'wave to earth', img: 'mc3.png' }
 ];
 
 let currentIndex = 0;
