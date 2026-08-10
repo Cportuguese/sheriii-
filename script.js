@@ -64,7 +64,7 @@ function preloadImages() {
     const img = new Image();
     img.onload = () => { imageCache[src] = true; };
     img.onerror = () => { imageCache[src] = false; };
-    img.src = src;
+    img.src = encodeURI(src);
   });
   // also preload the mc fallback images
   fallbackMcs.forEach((m) => {
@@ -73,7 +73,7 @@ function preloadImages() {
     const im = new Image();
     im.onload = () => { imageCache[m] = true; };
     im.onerror = () => { imageCache[m] = false; };
-    im.src = m;
+    im.src = encodeURI(m);
   });
 }
 
@@ -83,7 +83,7 @@ preloadImages();
 function loadTrack(index) {
   const track = playlist[index];
   if (!track) return;
-  audio.src = track.src;
+  audio.src = encodeURI(track.src);
   // show preloaded image immediately when available, otherwise use
   // the safe loader which will fall back to the placeholder on error
   // prefer track's image when valid; otherwise use a rotating mc fallback
@@ -103,7 +103,7 @@ function loadTrack(index) {
       const p = new Image();
       p.onload = () => { imageCache[mcFallback] = true; };
       p.onerror = () => { imageCache[mcFallback] = false; };
-      p.src = mcFallback;
+      p.src = encodeURI(mcFallback);
     }
   } else {
     // no track image: show mc fallback (or default if mc missing)
@@ -123,7 +123,7 @@ function safeSetImage(src) {
     console.warn('Image failed to load:', src, ' — falling back to', fallback);
     imageHolder.src = fallback;
   };
-  tester.src = src;
+  tester.src = encodeURI(src);
 }
 
 function playTrack() {
@@ -246,6 +246,11 @@ if (progress) {
 
 if (audio) {
   audio.addEventListener('timeupdate', updateProgress);
+  audio.addEventListener('error', (ev) => {
+    console.error('Audio failed to load/play:', audio.currentSrc || audio.src, ev);
+    // show user-friendly console hint with network state
+    console.error('NetworkState:', audio.networkState, 'ReadyState:', audio.readyState);
+  });
   audio.addEventListener('ended', () => {
     if (!audio.loop) {
       // advance to next track and ensure playback continues
