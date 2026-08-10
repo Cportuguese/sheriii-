@@ -31,6 +31,7 @@ const volUp = document.getElementById('vol-up');
 const volumeRange = document.getElementById('volume-range');
 
 const defaultImg = 'imgs/img-place.png';
+const fallbackMcs = ['imgs/mc1.png', 'imgs/mc2.png', 'imgs/mc3.png'];
 
 /* Playlist built from your audio/ folder - update entries if filenames differ */
 const playlist = [
@@ -65,6 +66,15 @@ function preloadImages() {
     img.onerror = () => { imageCache[src] = false; };
     img.src = src;
   });
+  // also preload the mc fallback images
+  fallbackMcs.forEach((m) => {
+    if (seen.has(m)) return;
+    seen.add(m);
+    const im = new Image();
+    im.onload = () => { imageCache[m] = true; };
+    im.onerror = () => { imageCache[m] = false; };
+    im.src = m;
+  });
 }
 
 // start preloading right away
@@ -76,13 +86,28 @@ function loadTrack(index) {
   audio.src = track.src;
   // show preloaded image immediately when available, otherwise use
   // the safe loader which will fall back to the placeholder on error
-  const imgSrc = track.img || defaultImg;
-  if (imageCache[imgSrc] === true) {
-    if (imageHolder) imageHolder.src = imgSrc;
-  } else if (imageCache[imgSrc] === false) {
-    if (imageHolder) imageHolder.src = defaultImg;
+  // prefer track's image when valid; otherwise use a rotating mc fallback
+  const trackImg = track.img;
+  const mcFallback = fallbackMcs[index % fallbackMcs.length];
+    if (trackImg && imageCache[trackImg] === true) {
+    if (imageHolder) imageHolder.src = trackImg;
+  } else if (trackImg && imageCache[trackImg] === false) {
+    // track image is known-bad -> use mc fallback
+    if (imageHolder) imageHolder.src = (imageCache[mcFallback] === true) ? mcFallback : defaultImg;
+  } else if (trackImg) {
+    // unknown status for track image: try it, but fall back to mc on error
+    if (imageHolder) safeSetImage(trackImg, mcFallback);
+    // ensure mc fallback is preloaded/shown if trackImg fails asynchronously
+    // safeSetImage will handle fallback to defaultImg; so also start preloading mcFallback
+    if (!imageCache[mcFallback]) {
+      const p = new Image();
+      p.onload = () => { imageCache[mcFallback] = true; };
+      p.onerror = () => { imageCache[mcFallback] = false; };
+      p.src = mcFallback;
+    }
   } else {
-    safeSetImage(imgSrc);
+    // no track image: show mc fallback (or default if mc missing)
+    if (imageHolder) imageHolder.src = (imageCache[mcFallback] === true) ? mcFallback : defaultImg;
   }
   songArtist.textContent = `${track.title} - ${track.artist}`;
   progress.value = 0;
@@ -92,10 +117,11 @@ function loadTrack(index) {
 function safeSetImage(src) {
   if (!imageHolder) return;
   const tester = new Image();
+  const fallback = arguments.length > 1 ? arguments[1] : defaultImg;
   tester.onload = () => { imageHolder.src = src; };
   tester.onerror = () => {
-    console.warn('Image failed to load:', src, ' — falling back to imgs/img-place.png');
-    imageHolder.src = 'imgs/img-place.png';
+    console.warn('Image failed to load:', src, ' — falling back to', fallback);
+    imageHolder.src = fallback;
   };
   tester.src = src;
 }
@@ -183,7 +209,7 @@ function startSlideshow() {
   let i = 0;
   slideshowInterval = setInterval(() => {
     // try load, fallback handled by safeSetImage
-    safeSetImage(imgs[i % imgs.length]);
+    safeSetImage(imgs[i % imgs.length], defaultImg);
     i++;
   }, 1500);
 }
@@ -192,7 +218,8 @@ function stopSlideshow() {
   if (slideshowInterval) { clearInterval(slideshowInterval); slideshowInterval = null; }
   // restore current track art
   const t = playlist[currentIndex];
-  safeSetImage((t && t.img) ? t.img : defaultImg);
+  const mcFallback = fallbackMcs[currentIndex % fallbackMcs.length];
+  safeSetImage((t && t.img) ? t.img : mcFallback, mcFallback);
 }
 
 function seekTo(value) {
