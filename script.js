@@ -51,13 +51,39 @@ let currentIndex = 0;
 let isPlaying = false;
 let isLoop = false;
 let slideshowInterval = null;
+// simple cache to track which images are loaded or failed
+const imageCache = Object.create(null);
+
+function preloadImages() {
+  const seen = new Set();
+  (playlist || []).forEach((t) => {
+    const src = (t && t.img) ? t.img : defaultImg;
+    if (seen.has(src)) return;
+    seen.add(src);
+    const img = new Image();
+    img.onload = () => { imageCache[src] = true; };
+    img.onerror = () => { imageCache[src] = false; };
+    img.src = src;
+  });
+}
+
+// start preloading right away
+preloadImages();
 
 function loadTrack(index) {
   const track = playlist[index];
   if (!track) return;
   audio.src = track.src;
-  // set image using a safe loader so missing/replaced files fall back
-  safeSetImage(track.img || 'imgs/img-place.png');
+  // show preloaded image immediately when available, otherwise use
+  // the safe loader which will fall back to the placeholder on error
+  const imgSrc = track.img || defaultImg;
+  if (imageCache[imgSrc] === true) {
+    if (imageHolder) imageHolder.src = imgSrc;
+  } else if (imageCache[imgSrc] === false) {
+    if (imageHolder) imageHolder.src = defaultImg;
+  } else {
+    safeSetImage(imgSrc);
+  }
   songArtist.textContent = `${track.title} - ${track.artist}`;
   progress.value = 0;
 }
