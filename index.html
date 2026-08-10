@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>para kay sherri pretty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+        href="https://fonts.googleapis.com/css2?family=Aldrich&family=Pixelify+Sans:wght@400..700&display=swap"
+        rel="stylesheet"
+    />
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="intro-screen">
+    <button id="envelope-button" type="button">
+      <img src="imgs/envelope.png" alt="Envelope" id="envelope-image">
+    </button>
+    <p id="intro-text">You received a message!  :> <br>- tap the envelope to open -</p>
+  </div>
+
+  <div id="main-container" class="hidden">
+    <div id="main-window">
+      <h1 id="title-text">music trip ka muna? ^^</h1>
+      <!-- Music Card -->
+      <div id="card-content">
+      <!-- Album Art -->
+        <div id="imagearea">
+          <img
+          src="imgs/img-place.png"
+          alt="Album art"
+          id="image-holder"
+          >
+        </div>
+        
+        <!-- Artist -->
+        <p id="song-artist">song - artist</p>
+        
+      </div>
+       <!-- Progress -->
+      <div id="progress-area">
+        <input type="range" id="progress" min="0" max="100" value="0">
+      </div>
+
+      <!-- Music Controls -->
+      <div id="buttons">
+        <img src="imgs/btn-loop.png" alt="Loop" id="btn-loop">
+        <img src="imgs/btn-back.png" alt="Previous" id="btn-prev">
+        <img src="imgs/btn-play.png" alt="Play" id="btn-play">
+        <img src="imgs/btn-next.png" alt="Next" id="btn-next">
+        <img src="imgs/btn-volume.png" alt="Volume" id="btn-vol">
+      </div>
+      <!-- Volume control popup (hidden by default) -->
+      <div id="volume-control" class="hidden">
+        <button id="vol-down" type="button">-</button>
+        <input type="range" id="volume-range" min="0" max="1" step="0.01" value="0.8">
+        <button id="vol-up" type="button">+</button>
+      </div>
+     
+      <!-- Hidden audio element -->
+      <audio id="audio-player" preload="metadata"></audio>
+
+    </div>  
+  </div>
+  <script src="script.js"></script>
+  </body>
+  </html>
