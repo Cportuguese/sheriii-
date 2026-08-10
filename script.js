@@ -194,7 +194,19 @@ if (progress) {
 if (audio) {
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('ended', () => {
-    if (!audio.loop) nextTrack();
+    if (!audio.loop) {
+      // advance to next track and ensure playback continues
+      nextTrack();
+      // Some browsers dispatch a 'pause' before 'ended', which can
+      // set `isPlaying` false — force a play to continue the queue.
+      try {
+        playTrack();
+      } catch (e) {
+        // play() might return a promise that rejects in some contexts;
+        // swallowing errors keeps behavior graceful in deployments.
+        console.warn('Auto-play of next track failed:', e);
+      }
+    }
   });
   audio.addEventListener('play', () => { 
     if (btnPlay) btnPlay.classList.add('playing'); 
